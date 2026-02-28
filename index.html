@@ -1,0 +1,288 @@
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Resell Profit Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="auth-container" id="auth-container" style="display: none;">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1>📈 Smart Resell Profit Tracker</h1>
+                <p>Track your reselling profits efficiently</p>
+            </div>
+            
+            <!-- Login Form -->
+            <form class="auth-form" id="login-form">
+                <h2>Welcome Back</h2>
+                <div class="input-group">
+                    <label for="login-username">Username</label>
+                    <input type="text" id="login-username" placeholder="Enter your username" required>
+                </div>
+                <div class="input-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn primary auth-btn">Login</button>
+                <p class="auth-switch">Don't have an account? <a href="#" id="show-signup">Sign Up</a></p>
+            </form>
+            
+            <!-- Signup Form -->
+            <form class="auth-form" id="signup-form" style="display: none;">
+                <h2>Create Account</h2>
+                <div class="input-group">
+                    <label for="signup-username">Username</label>
+                    <input type="text" id="signup-username" placeholder="Choose a username" required minlength="3">
+                </div>
+                <div class="input-group">
+                    <label for="signup-email">Email</label>
+                    <input type="email" id="signup-email" placeholder="Enter your email" required>
+                </div>
+                <div class="input-group">
+                    <label for="signup-password">Password</label>
+                    <input type="password" id="signup-password" placeholder="Choose a password" required minlength="6">
+                </div>
+                <button type="submit" class="btn primary auth-btn">Sign Up</button>
+                <p class="auth-switch">Already have an account? <a href="#" id="show-login">Login</a></p>
+            </form>
+        </div>
+    </div>
+
+    <div class="app">
+        <header class="header">
+            <button class="btn secondary theme-toggle" id="theme-toggle" type="button" style="width: 28px; height: 28px; min-width: 28px; padding: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; line-height: 1; letter-spacing: 0;">🌙</button>
+            <div>
+                <h1>📈 Smart Resell Profit Tracker</h1>
+            </div>
+            <div class="header-right">
+                <div class="stats">
+                    <div class="stat"><span class="label">Total Items</span><span class="value" id="total-items">0</span></div>
+                    <div class="stat"><span class="label">Total Profit</span><span class="value" id="total-profit">₹0.00</span></div>
+                    <div class="stat"><span class="label">Profitable Items</span><span class="value" id="profitable-items">0</span></div>
+                </div>
+            </div>
+        </header>
+
+        <nav class="tabs">
+            <button class="tab active" data-view="dashboard">Dashboard</button>
+            <button class="tab" data-view="add">Add Item</button>
+            <button class="tab" data-view="all">All Items</button>
+            <button class="tab" data-view="filter">Filter by Price</button>
+            <button class="tab" data-view="analysis">Analysis</button>
+        </nav>
+
+        <section class="view active" id="view-dashboard">
+            <div class="grid">
+                <div class="card">
+                    <h3>🎯 Best Item to Sell First</h3>
+                    <div id="best-item" class="muted">No items yet.</div>
+                </div>
+                <div class="card">
+                    <h3>🏆 Top 5 by Profit %</h3>
+                    <div id="top-five" class="list">
+                        <p class="muted">No items yet.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="view" id="view-add">
+            <div class="card">
+                <h3>➕ Add New Item</h3>
+                <form id="item-form">
+                    <div class="form-grid">
+                        <div class="field">
+                            <label for="item-name">Item Name</label>
+                            <input id="item-name" required placeholder="e.g. iPhone 13">
+                        </div>
+                        <div class="field">
+                            <label for="item-category">Category</label>
+                            <select id="item-category" required>
+                                <option value="">Select category</option>
+                                <option>Electronics</option>
+                                <option>Furniture</option>
+                                <option>Fashion</option>
+                                <option>Books</option>
+                                <option>Sports</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label for="buying-price">Buying Price (₹)</label>
+                            <input id="buying-price" type="number" min="0" step="0.01" required>
+                        </div>
+                        <div class="field">
+                            <label for="market-price">Current Market Price (₹)</label>
+                            <input id="market-price" type="number" min="0" step="0.01" required>
+                        </div>
+                    </div>
+                    <div id="price-preview" class="list-item" style="margin-top:12px;display:none;">
+                        <div><strong>Expected Profit:</strong> <span id="preview-profit">₹0.00</span></div>
+                        <div style="margin-top:6px;"><strong>Profit %:</strong> <span id="preview-profit-percent">0.00%</span></div>
+                        <div style="margin-top:6px;"><strong>Status:</strong> <span id="preview-status">Not Worth Buying ❌</span></div>
+                    </div>
+                    <div class="action-row">
+                        <button class="btn primary" type="submit">Add Item</button>
+                        <button class="btn secondary" type="reset">Reset</button>
+                    </div>
+                </form>
+                <p id="form-message" class="muted" style="margin-top:10px;"></p>
+            </div>
+            <div class="card" style="margin-top:14px;">
+                <h3>🕒 Recently Added Items</h3>
+                <div id="recent-items" class="list"><p class="muted">No recent items.</p></div>
+            </div>
+        </section>
+
+        <section class="view" id="view-all">
+            <div class="card">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px;">
+                    <h3>📋 All Items</h3>
+                    <button class="btn danger" id="clear-all">Clear All</button>
+                </div>
+                <div style="overflow:auto;">
+                    <table id="all-items-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th class="sortable" data-sort="buyingPrice">Buying <span class="sort-icon"></span></th>
+                                <th class="sortable" data-sort="marketPrice">Market <span class="sort-icon"></span></th>
+                                <th class="sortable" data-sort="profit">Profit/Loss <span class="sort-icon"></span></th>
+                                <th class="sortable" data-sort="profitPercent">Profit/Loss % <span class="sort-icon"></span></th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="all-items-body">
+                            <tr><td colspan="8" class="muted">No items added yet.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="view" id="view-filter">
+            <div class="card">
+                <h3>🔍 Search Items by Market Price Range</h3>
+                <div class="filter-controls-slider">
+                    <div class="range-display" id="range-display">₹0 — ₹100000</div>
+                    <div class="dual-range-slider">
+                        <div class="slider-track">
+                            <div class="slider-range" id="slider-range"></div>
+                        </div>
+                        <input type="range" id="min-price" class="slider-thumb slider-thumb-min" min="0" max="100000" value="0" step="100">
+                        <input type="range" id="max-price" class="slider-thumb slider-thumb-max" min="0" max="100000" value="100000" step="100">
+                    </div>
+                    <button class="btn primary" id="apply-filter">Apply Filter</button>
+                    <div class="filter-chips" id="filter-chips"></div>
+                </div>
+            </div>
+            <div class="card" style="margin-top:14px;">
+                <h3>Filter Results</h3>
+                <div id="filter-results" class="muted" style="margin-top:8px;">Enter range and click Apply Filter.</div>
+            </div>
+        </section>
+
+        <section class="view" id="view-analysis">
+            <h3 class="analysis-summary-title">📌 Analysis Summary</h3>
+            <div class="analysis-summary-grid">
+                <div class="analysis-summary-card">
+                    <span class="analysis-summary-label">Average Profit %</span>
+                    <span class="analysis-summary-value" id="analysis-avg-profit">0%</span>
+                </div>
+                <div class="analysis-summary-card">
+                    <span class="analysis-summary-label">Loss Making Items</span>
+                    <span class="analysis-summary-value" id="analysis-loss-items">0</span>
+                </div>
+                <div class="analysis-summary-card">
+                    <span class="analysis-summary-label">Total Investment</span>
+                    <span class="analysis-summary-value" id="analysis-total-investment">₹0.00</span>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="card">
+                    <h3>📊 Top Profits Chart</h3>
+                    <div class="canvas-wrap">
+                        <canvas id="profit-canvas" width="520" height="340"></canvas>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>🧁 Category Profit Share</h3>
+                    <div class="canvas-wrap">
+                        <canvas id="category-canvas" width="520" height="260"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="grid" style="margin-top:14px;grid-template-columns:1fr;">
+                <div class="card">
+                    <h3>🧩 Category Breakdown</h3>
+                    <div id="category-breakdown" class="list">
+                        <p class="muted">No category data available.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Edit Item Modal -->
+    <div id="edit-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center;">
+        <div class="card" style="width: 90%; max-width: 600px; margin: auto;">
+            <h3>✏️ Edit Item</h3>
+            <form id="edit-form">
+                <div class="form-grid">
+                    <div class="field">
+                        <label for="edit-item-name">Item Name</label>
+                        <input id="edit-item-name" required placeholder="e.g. iPhone 13">
+                    </div>
+                    <div class="field">
+                        <label for="edit-item-category">Category</label>
+                        <select id="edit-item-category" required>
+                            <option value="">Select category</option>
+                            <option>Electronics</option>
+                            <option>Furniture</option>
+                            <option>Fashion</option>
+                            <option>Books</option>
+                            <option>Sports</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="edit-buying-price">Buying Price (₹)</label>
+                        <input id="edit-buying-price" type="number" min="0" step="0.01" required>
+                    </div>
+                    <div class="field">
+                        <label for="edit-market-price">Current Market Price (₹)</label>
+                        <input id="edit-market-price" type="number" min="0" step="0.01" required>
+                    </div>
+                </div>
+                <div id="edit-price-preview" class="list-item" style="margin-top:12px;display:none;">
+                    <div><strong>Expected Profit:</strong> <span id="edit-preview-profit">₹0.00</span></div>
+                    <div style="margin-top:6px;"><strong>Profit %:</strong> <span id="edit-preview-profit-percent">0.00%</span></div>
+                    <div style="margin-top:6px;"><strong>Status:</strong> <span id="edit-preview-status">Not Worth Buying ❌</span></div>
+                </div>
+                <div class="action-row" style="margin-top: 20px;">
+                    <button class="btn primary" type="submit">Save Changes</button>
+                    <button class="btn secondary" type="button" id="edit-modal-cancel">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="settings-fab-wrap" id="settings-wrap" style="display: none;">
+        <div class="settings-menu" id="settings-menu" style="display: none;">
+            <p class="settings-user">👤 <span id="current-user"></span></p>
+            <button class="btn danger settings-logout" id="logout-btn" type="button">Logout</button>
+        </div>
+        <button class="btn secondary settings-fab" id="settings-btn" type="button">⚙️ Settings</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
